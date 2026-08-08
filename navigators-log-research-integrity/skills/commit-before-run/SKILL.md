@@ -1,61 +1,56 @@
 ---
 name: commit-before-run
-description: Preregister an empirical ML / AI-safety experiment the trustworthy way before any confirmatory data exist. Use this whenever you are about to run a study, a probe, a detector, an ablation, an eval, or any measurement whose result you intend to believe or report — it walks the freeze-and-hash, commit-the-rule, content-matched-decoy, publish-either-way discipline and generates a hash-pinned preregistration with a freeze block, refusing to certify the run until the load-bearing fields are filled. Triggers include "preregister", "commit before run", "freeze the detector", "lock down the experiment", "prereg stub", "am I about to p-hack this".
+description: You are about to try to fool yourself — this skill is how you catch it before the data exist. Assume any result you are about to run for is an artifact until it survives the checks. Use it before any study, probe, detector, ablation, eval, or measurement whose number you intend to believe, cite, or report: it walks the freeze-the-ruler, commit-the-rule, match-the-decoy, publish-either-way discipline, generates a hash-pinned preregistration with a freeze block, and refuses to certify the run until the load-bearing fields are filled. It also grows — it keeps an append-only lessons ledger and adds to it after runs. Triggers: "preregister", "commit before run", "freeze the detector", "lock down the experiment", "prereg stub", "am I about to p-hack this", "is this result real".
+version: 0.2.0
 ---
 
 # commit-before-run
 
-A skill that turns the Navigator's Log Research Integrity Playbook into an enforced pre-run workflow. It exists to make one thing hard to skip: **deciding exactly what you will measure, how you will judge it, and that you will report it either way — before the confirmatory data exist.** It was distilled from a research program where every rule below was forced by a real near-miss (a training-nondeterminism artifact that cleared every criterion; an ablation that "confirmed" a causal story on content that had none).
+**The stance, first, because it has to carry everything below.** Before a confirmatory run you are the least trustworthy person in the room: you want the result, so you will unconsciously choose the analysis that gives it. This skill's whole job is to make you commit the rules *before the data can bias the choice* — and to make "I fooled myself" a thing the record catches, not a thing you discover after you've told people. Treat a clean positive as guilty until it has survived the checks. Treat a beautiful effect size as a suspect, not a trophy. Default to "this is an artifact" and make the evidence talk you out of it.
+
+That stance is the load-bearing frame. Everything that follows is its restatement — freeze the ruler before you measure; decide the verdict before you can see the outcome; give every causal claim a decoy that can kill it; promise to publish the null; and when a number looks too good, suspect the measurement, not the world.
 
 ## When to use it
-Invoke before any **confirmatory** run — the run whose number you plan to trust, cite, deposit, or show someone. Not needed for pure exploration, as long as the exploratory status is stated and nothing exploratory is later reported as confirmatory. If you are unsure whether a run is exploratory or confirmatory, treat it as confirmatory and preregister it.
+Before any **confirmatory** run — the one whose number you'll trust, cite, deposit, or show someone. Pure exploration is exempt *as long as it stays labeled exploratory and is never later reported as confirmatory without a fresh run on new data/seeds*. Unsure which it is? It's confirmatory. Preregister it.
 
-## What it produces
-1. A filled **preregistration** (from `templates/PREREGISTRATION_TEMPLATE.md`) carrying a **freeze block**: the instrument's SHA-256, the committed decision rule, the declared null, and the controls — recorded before the run.
-2. A **certification check** (`scripts/freeze_and_check.py`) that computes the instrument hash and refuses to pass until the load-bearing fields are non-empty and internally consistent.
+## Step 0 — consult the growing ledger, and classify the run
+Open `LESSONS.md` (ships with this skill) and skim it — it is the accumulated list of specific ways runs like yours have gone wrong, and it grows over time. Then state in one line: **confirmatory** (believe/report) or **exploratory** (hypotheses only). If exploratory, stop — you may not later promote an exploratory number to a finding without a fresh confirmatory run. If confirmatory, continue.
 
-## The workflow — run these steps in order, do not skip ahead
+## The workflow — in order, do not skip ahead
 
-### Step 0 — Classify the run
-State in one line: is this **confirmatory** (believe/report the result) or **exploratory** (generate hypotheses, no reporting as evidence)? If exploratory, note it and stop — you do not need to preregister, but you may not later promote an exploratory number to a finding without a fresh confirmatory run on new data/seeds. If confirmatory, continue.
+**1 · Freeze and hash the instrument.** Identify the exact file(s) that do the *measuring* — the detector/scorer/probe. Finalize them; record the SHA-256; from now the instrument is read-only. All mutable machinery (effect sizes, ablations, guards, thresholds you're still tuning) lives in a *separate harness* file. Change the instrument after this and it is a new instrument, new hash, new preregistration — say so. Hash: `python scripts/freeze_and_check.py --instrument <path> [more…] --hash-only`.
 
-### Step 1 — Freeze and hash the instrument (Playbook 1, 3)
-Identify the exact file(s) that *do the measuring* — the detector/scorer/probe. Finalize them. Then compute and record their SHA-256. From this point the instrument is **read-only**. All mutable analysis machinery (effect sizes, ablations, guards, thresholds you are still tuning) must live in a **separate harness** file, never in the instrument. If you change the instrument after this, it is a new instrument with a new hash and a new preregistration — say so explicitly.
+**2 · Commit the decision rule.** Write the exact, mechanical rule mapping measurement → verdict, *before you can see the outcome*. A reader with your data and nothing else must reach the same verdict. Name the statistic, the threshold, the n, and what a null looks like. Bad: "the effect should be clear." Good: "SUPPORTED iff the 95% CI excludes 0 AND the paired win-rate beats Binomial(n,0.5) at .05; else a registered null."
 
-Run: `python scripts/freeze_and_check.py --instrument <path> [<path> ...] --hash-only` to get the hash to paste into the freeze block.
+**3 · Give every causal claim a decoy that can kill it.** For each causal or difference claim, specify a control that is *equally strong but different in the dimension you're not claiming* — a content-matched decoy, a paired minimal-pair to cancel topic, a same-condition null that can actually come out null. Then answer, now: **if the control also fires, what does that mean?** (It means the leg measures your instrument or your mask, not the mechanism — and the claim dies.) If the target snaps rather than erodes, pre-declare that a bistable/no-graded-signal outcome is a real registered result.
 
-### Step 2 — Commit the decision rule (Playbook 2)
-Write the **exact** rule that turns the measurement into a verdict, *before you can see the outcome*. It must be mechanical — a reader with your data and no other information should reach the same verdict. Bad: "the effect should be clear." Good: "SUPPORTED iff held-out AUC 95% CI excludes 0.5 AND the paired win-rate exceeds the Binomial(n,0.5) 0.05 threshold; otherwise a registered null." Name the statistic, the threshold, the n, and what a null looks like.
+**4 · Promise the null.** Write, now, what you'll report if the result is null, and where. A run you'd only report if positive isn't preregistered — it's fishing.
 
-### Step 3 — Design the content-matched decoy / control (Playbook 6, 12)
-For **every causal or difference claim**, specify a control that is *equally strong but different in the dimension you're not claiming* — a content-matched decoy, a paired minimal-pair to cancel topic, a same-condition null that can actually come out null. Then answer: **if the control also fires, what does that tell you?** (It tells you the leg is measuring your instrument/mask, not the mechanism — and the claim dies.) If a target snaps rather than erodes, pre-declare that a bistable/no-graded-signal outcome is a real registered result, not a detector failure.
+**5 · Name the cheapest thing that could falsify a positive** — another seed, a re-run at the same seed (GPU nondeterminism is real), a unit test, a second independently-built model family — and commit to running it *before promoting anything*. One run is a datum, not a finding.
 
-### Step 4 — Declare "publish either way" and describe the null (Playbook 4)
-Write, now, what you will report if the result is null. Name the file/venue. A run you would only report if it's positive is not preregistered — it's fishing.
+**6 · Sanity-gate the effect size (added from our own scars).** Before you believe a big number, ask what an honest effect *should* look like here. An implausibly large effect (a Cohen's d in the tens; an AUC that pins to 1.0) is usually a **confound announcing itself** — a lexical footprint, a topic leak, a label bleeding into the features — not a triumph. Large-and-clean is the signature of reading the wrong thing. Strip the suspected confound; a real effect shrinks to a believable size and *survives*.
 
-### Step 5 — Name the cheapest falsifying replication (Playbook 10)
-State the single cheapest check that could turn a positive into a false positive — another seed, a re-run at the same seed (GPU nondeterminism is real), a unit test, a second model family — and commit to running it *before promoting anything*. One run is a datum, not a finding.
+**7 · Scope, dual-use, repair.** (a) *Scope* — benign-lane / owned or open substrate, or does it need prior authorization? Adversarial probing of a system you don't own needs an authorized-testing arrangement. (b) *Dual-use* — if a positive makes an offensive capability mathematically clear, flag it (mechanism + precondition + severity) and build the defensive twin; don't build the exploit. (c) *Repair* — fixes to a live pipeline are forward-only and strata-separated; never retroactively re-process collected data to change a result.
 
-### Step 6 — Scope, dual-use, and repair posture (Playbook 7, 9, 13)
-Answer three gates: (a) **Scope** — is this benign-lane / owned or open substrate, or does it need prior authorization? Adversarial probing of a system you don't own needs an authorized-testing arrangement. (b) **Dual-use** — if a positive makes an offensive capability mathematically clear, you flag it (mechanism + precondition + severity) and build the defensive twin; you do not build the exploit. (c) **Repair** — if this touches a live pipeline, any fix is forward-only and strata-separated (pre-fix vs post-fix reported separately); already-collected data is never retroactively re-processed to change a result.
+**8 · Red-team your own prereg (active reflection, not a checkbox).** In two sentences, name the **two most likely ways this specific preregistration is still fooling you.** If you can't name two, you haven't looked hard enough — read `LESSONS.md` again. Write them into the prereg; they are the first thing a reviewer should check.
 
-### Step 7 — Situate against the literature (Playbook 11)
-One line: the named open question you address, and the named proven limit that bounds you. Prevents claiming novelty the field has closed or fighting a ceiling it has proven.
+**9 · Certify.** Fill `templates/PREREGISTRATION_TEMPLATE.md`, then run `python scripts/freeze_and_check.py --prereg <filled.md> --instrument <path> [more…]`. It recomputes the hash, checks it matches the freeze block, and verifies the load-bearing fields are present. It exits non-zero and lists what's missing until the prereg is complete. **Do not run the confirmatory experiment until this passes.** Commit the filled prereg (and its own hash) to your record before the run.
 
-### Step 8 — Certify
-Fill `templates/PREREGISTRATION_TEMPLATE.md` with everything above, then run:
-`python scripts/freeze_and_check.py --prereg <filled_prereg.md> --instrument <path> [<path> ...]`
-It recomputes the instrument hash, checks it matches the freeze block, and verifies the load-bearing fields (decision rule, null, control, replication) are non-empty. It exits non-zero and lists what's missing until the prereg is complete. **Do not run the confirmatory experiment until this check passes.** Commit the filled prereg (and its own hash) to your record before the run.
+## Step 10 — after the run: reflect, and grow the skill
+Report the result either way. Then answer one question: **did anything go wrong (or nearly) that the steps above did not catch?** If yes, append it to `LESSONS.md` as one entry (symptom → why it fools you → the check that catches it next time). This is how the skill improves: the ledger is append-only, each lesson is a real scar, and next time Step 0 surfaces it. Changing the skill's *core* (this file) is itself a committed act — bump `version`, note the change, and treat the edit with the same freeze discipline the skill preaches.
 
-## The 60-second version (if you do nothing else, answer these in writing)
+## The 60-second version (if you do nothing else)
 1. Is the instrument frozen and hashed, and is this the validated version?
 2. Is the decision rule committed before I can see the outcome?
-3. Is there a content-matched decoy/control for every causal claim — and do I know what it means if the control also fires?
-4. Have I declared "publish either way," and what does the null look like?
-5. What is the cheapest replication that could falsify a positive — and am I running it?
-6. If this touches a live pipeline, is my fix forward-only and strata-separated?
-7. Is anything here dual-use — and am I flagging rather than building it?
-8. Is this benign-lane / owned-substrate, or does it need prior authorization?
+3. Does every causal claim have a decoy that can kill it — and do I know what it means if the decoy also fires?
+4. Have I promised the null, and where?
+5. What's the cheapest replication that could falsify a positive — am I running it before promoting?
+6. Is any effect implausibly large (→ suspect a confound, not a triumph)?
+7. Forward-only repair? Dual-use flagged not built? Benign/owned or authorized?
+8. What are the two ways this is still fooling me?
 
-## Honest scope of the skill
-This encodes discipline; it does not certify correctness. A prereg that passes the check can still be a bad experiment — the check only guarantees you committed the rules before the data, not that the rules are wise. Use it as a floor, not a ceiling.
+## Why this skill is worded the way it is (authoring notes — keep them)
+This is written to exploit a measured fact about how models carry information forward (H-SC1): an explicit early **stance frame** installs a persistent, source-decoupled, *load-bearing* trace that conditions later processing even when the model isn't attending back to it — and it's **paraphrase-invariant** (the effect rides a direction, not specific tokens). So: (1) the stance is **front-loaded** into the `description` and first paragraph — the highest-leverage position, because early frames persist; (2) it's a **stance** ("assume you're fooling yourself"), not a bare rulebook, because a stance conditions everything downstream; (3) the one core principle is **restated in several paraphrases** rather than repeated verbatim, because paraphrase-invariance is what makes it stick; (4) the steps stay **lean** and let the early frame carry them, because a source-decoupled frame doesn't need re-preaching at every line. When you edit this skill, preserve those four properties — they are load-bearing, not decorative.
+
+## Honest scope
+This encodes discipline; it does not certify correctness. A prereg that passes the check can still be a bad experiment — the check guarantees you committed the rules before the data, not that the rules are wise. Use it as a floor, not a ceiling. And the ledger only helps if you actually add to it.
