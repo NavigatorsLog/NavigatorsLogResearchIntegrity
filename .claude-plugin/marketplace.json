@@ -1,0 +1,18 @@
+{
+  "name": "navigators-log",
+  "owner": {
+    "name": "Christopher Blake Head",
+    "url": "https://github.com/NavigatorsLog"
+  },
+  "metadata": {
+    "description": "Navigator's Log R&D — research-integrity tooling for trustworthy empirical ML / AI-safety work.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "navigators-log-research-integrity",
+      "source": "./navigators-log-research-integrity",
+      "description": "commit-before-run (preregister with a freeze block; refuse to run until rule/control/null are committed) + frozen-instrument-scaffold (a frozen-probe transfer harness with the confound-control ladder and traps pre-guarded)."
+    }
+  ]
+}
