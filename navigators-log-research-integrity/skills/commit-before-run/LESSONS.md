@@ -61,3 +61,18 @@
 
 ---
 *(Append new lessons below this line, newest last. Keep the format. A lesson earns its place by being a specific scar with a specific check.)*
+
+### L12 · Cross-projection can return STRUCTURE, not a binary — pre-register the middle and read the cluster pattern, not the median
+- **Symptom:** you set up a clean "SHARED vs DISTINCT" cross-projection (L11's fix) expecting one answer, and the median off-diagonal cosine lands *between* the ceiling and the floor — neither verdict fires. The temptation is to (a) call it "MIXED / inconclusive" and shrug, or (b) pick the family that gives the verdict you wanted. (H-SC3: "is *instructedness* one axis?" — median off-diag 0.19–0.36 in all 5 families, SHARED rejected 0/5, but most pairs above the DISTINCT floor too.)
+- **Why it fools you:** a two-bucket decision rule assumes the constructs are either the same or unrelated. Real representations are often a *structured family* — some pairs share a lane, others are orthogonal — and a single summary statistic (the median) averages that structure into a mush that reads as "no result."
+- **Catch:** commit, *before running*, to reading the **full pair matrix and its stability across families**, not just the aggregate. Name the middle outcome in the prereg as its own reportable finding (not a null). Then: which *pairs* clear the SHARED bar in ≥k families? which sit at the floor? does a consistent sub-cluster survive across independent families? A lane that is SHARED 5/5 (H-SC3: length↔constraint) is a real, monitorable finding even when the global verdict is "MIXED." Report the structure; the median is a headline, not the result.
+
+### L13 · "Harder to break" is not "confirmed" — it's "I have not yet found the failure condition"
+- **Symptom:** each new test fails to break the theory, the effect keeps surviving, and it starts to feel proven. You relax; you reach for the word "established."
+- **Why it fools you:** survival of the tests you *thought of* is evidence, but the space of tests you didn't think of is unbounded. Absence of a found failure is not presence of a proof — and confidence quietly converts "not yet falsified" into "true," which is exactly when you stop looking.
+- **Catch:** each time a theory survives, restate the result as "I have not yet found the failure condition," and name the next condition you haven't tried (a new baseline, an unrun modality, an unmodeled confound, an independent replicator). Promotion requires *independent* replication (different party/data), not one more survival on your own bench. Keep the word "demonstrated" behind the claims register (Step 2); default to "consistent with."
+
+### L14 · Don't fall in love with the elegant pattern before you've killed the boring explanations
+- **Symptom:** a clean, beautiful structure appears — a crisp cluster, a suspiciously tidy scaling law, a metaphor that "just fits." You feel the pull to write it up.
+- **Why it fools you:** aesthetic satisfaction is a real cognitive reward and it fires *before* the alternative-explanation search is done. Visual/spatial intuition is a superb hypothesis *generator* and a terrible *judge* — the prettier the pattern, the more motivated you are to skip the ugly checks (leakage, unit-of-analysis, a random-direction baseline, preprocessing artifacts).
+- **Catch:** treat elegance as a flag to test *harder*, not a signal you're right. Before writing it up, list the two most boring explanations (a leak, a confound, a non-independent unit inflating n) and rule each out with a specific check. Intuition proposes; controls, baselines, and falsification decide. If you can't bear to attack the pretty pattern, that feeling *is* the bias — attack it first.

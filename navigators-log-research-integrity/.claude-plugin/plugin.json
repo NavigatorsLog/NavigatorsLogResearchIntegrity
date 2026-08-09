@@ -1,6 +1,6 @@
 {
   "name": "navigators-log-research-integrity",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Trustworthy empirical ML / AI-safety research, packaged: preregister with a freeze block and refuse to run until the rule, control, and null are committed (commit-before-run), and scaffold a frozen-probe transfer experiment with the confound-control ladder and its traps pre-guarded (frozen-instrument-scaffold).",
   "author": {
     "name": "Christopher Blake Head",

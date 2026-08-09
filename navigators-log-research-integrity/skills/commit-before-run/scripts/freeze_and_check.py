@@ -56,6 +56,11 @@ REQUIRED_MARKERS = {
     "publish-either-way": r"if the result is\s+\*\*null\*\*|publish[- ]either[- ]way",
     "control/decoy": r"content-matched|minimal[- ]pair|same-condition null|decoy",
     "cheapest replication": r"cheapest.*replication|before\s+\*\*promoting\*\*|before promoting",
+    # --- added v0.3.0: the pre-freeze and inferential half a hostile reviewer attacks ---
+    "pre-freeze selection history": r"explored before freez",
+    "baseline battery": r"random[- ]direction|baseline batter",
+    "unit of analysis": r"unit of analysis",
+    "claims register": r"claims register",
 }
 
 # Any of these left in the doc means a field was not filled.

@@ -25,6 +25,7 @@ One-line description of the question:
 - **Harness (mutable) files, kept OUTSIDE the instrument:** `<harness path(s)>`
 - **Driver / stimulus file + hash (if applicable):** `<path>` `<sha256>`
 - If the instrument changes after this block, it is a NEW instrument → new hash → new preregistration. State any such change here: `<none / describe>`
+- **Pre-freeze selection history (development-phase forking paths):** how many instrument variants — features, layers, positions, analysis paths — were **explored before freezing**, and on what data? `<N + what varied>`. Where the development/design log lives: `<path>`. *(The freeze protects the confirmatory stage; it does NOT eliminate selection effects in the development stage. If the honest answer is "many, undocumented," say so — that bounds the claim.)*
 
 ---
 
@@ -38,6 +39,15 @@ Primary hypothesis/hypotheses (pinned):
 - **H1:** <claim> — supported iff <rule>.
 - **H2 (optional):** <claim> — supported iff <rule>.
 
+**Unit of analysis (state before the n means anything).** What is **one independent observation**? `<e.g. one premise; one model; one paraphrase family>`. The true independent n after prompt / paraphrase / premise / source **overlap** is: `<real n, which may be < the cell count>`. The test above treats the unit as: `<independent items | clustered by premise | aggregated to model>`. If items share a premise pool or paraphrase seed, they are NOT independent — cluster/aggregate to the real unit, or report both. Cheapest mitigation named: `<...>`.
+
+**Claims register (pin the strongest word each claim may use — committed now, so the write-up can't inflate).**
+| claim | strongest allowed word | replication class |
+|---|---|---|
+| <claim 1> | [ proposed / consistent-with-causal / demonstrated ] | [ internal-replication / independent-replication ] |
+| <claim 2> | [ … ] | [ … ] |
+"Causal" is allowed only if the design **intervenes on the representation** and the predicted phenomenon changes; otherwise the strongest word is "consistent with a downstream causal relationship." "Independent replication" means a different party/data, not a re-run.
+
 ---
 
 ## 3. Controls & decoys (one per causal/difference claim)
@@ -46,6 +56,12 @@ Primary hypothesis/hypotheses (pinned):
 | <the causal claim> | <content-matched decoy / paired minimal-pair / same-condition null> | <e.g. ~0.5 / n.s.> | the leg measures the instrument/mask, not the mechanism → claim dies |
 
 - **Bistability note:** if the target snaps rather than erodes, a no-graded-signal outcome is a registered result, not a detector failure.  <applies / n/a>
+
+**Baseline battery (the instrument's number means nothing in absolute terms — only its position between a floor and a ceiling).** Commit the comparators now:
+- **Floor** — a random-direction / random-probe result the instrument must beat: `<expected ~0 / ~chance>`.
+- **Ceiling** — a self-split or target-trained probe (the most agreement achievable given estimation noise): `<expected value>`.
+- **≥1 cheap alternative** the instrument must beat: `<token/position heuristic | layer-only baseline | alternative feature-selection>`.
+- The result is read as **where it sits between floor and ceiling**, never as a bare number. Survives randomization (beats the random-direction floor)? `<committed check>`.
 
 ---
 

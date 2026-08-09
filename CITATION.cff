@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Navigator's Log — Research Integrity (commit-before-run + frozen-instrument-scaffold)"
+abstract: >-
+  An installable Claude Code plugin packaging a trustworthy pre-run discipline for
+  empirical ML / AI-safety research. commit-before-run generates a hash-pinned
+  preregistration with a freeze block and refuses to certify a run until the
+  decision rule, content-matched control, publish-either-way null, and cheapest
+  replication are committed; it also grows via an append-only lessons ledger.
+  frozen-instrument-scaffold provides a "carry a frozen probe to a model it was
+  never fit to" transfer harness with the confound-control ladder and known traps
+  pre-guarded.
+type: software
+authors:
+  - family-names: Head
+    given-names: Christopher Blake
+    orcid: "https://orcid.org/0009-0004-2308-6051"
+    affiliation: "Navigator's Log R&D"
+version: "0.3.0"
+license: Apache-2.0
+repository-code: "https://github.com/NavigatorsLog/NavigatorsLogResearchIntegrity"
+keywords:
+  - research-integrity
+  - preregistration
+  - ai-safety
+  - interpretability
+  - reproducibility
+  - commit-before-run

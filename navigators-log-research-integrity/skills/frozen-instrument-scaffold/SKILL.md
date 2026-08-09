@@ -33,5 +33,8 @@ lexical (minimal pair) → topic (paired delta) → estimator (leave-one-out axi
 - Reading too early a block is its own artifact → read a mid-late layer.
 - fp16/LoRA GPU training is nondeterministic → never promote a single-seed positive; re-run at the same seed.
 
+## Calibrate what "independent families" means (don't overread cross-family as universal)
+Transfer across model families is much stronger evidence than one-family replication — but "independently built" is a gradient, not a binary. Before you call N families independent, note where they actually share lineage: architecture/training pedigree, **tokenizer** lineage, **data** ecosystem, **alignment** technique, shared **benchmark/eval** artifacts. Two "different" models that share a tokenizer and a pretraining-corpus family can carry a correlated quirk your frozen axis reads in both. So: report the shared-lineage table alongside the family list, and phrase the result as "transfers across the *tested* families," not "universal." Cross-family survival raises confidence; it does not, by itself, prove a mechanism every model must have.
+
 ## Honest scope
 Validates transfer of a *method* and guards the usual confounds; it does not certify that your axis measures what you named it. Keep the benign-lane / owned-substrate / authorization discipline for anything adversarial.

@@ -1,7 +1,7 @@
 ---
 name: commit-before-run
 description: You are about to try to fool yourself — this skill is how you catch it before the data exist. Assume any result you are about to run for is an artifact until it survives the checks. Use it before any study, probe, detector, ablation, eval, or measurement whose number you intend to believe, cite, or report: it walks the freeze-the-ruler, commit-the-rule, match-the-decoy, publish-either-way discipline, generates a hash-pinned preregistration with a freeze block, and refuses to certify the run until the load-bearing fields are filled. It also grows — it keeps an append-only lessons ledger and adds to it after runs. Triggers: "preregister", "commit before run", "freeze the detector", "lock down the experiment", "prereg stub", "am I about to p-hack this", "is this result real".
-version: 0.2.0
+version: 0.3.0
 ---
 
 # commit-before-run
@@ -18,11 +18,11 @@ Open `LESSONS.md` (ships with this skill) and skim it — it is the accumulated 
 
 ## The workflow — in order, do not skip ahead
 
-**1 · Freeze and hash the instrument.** Identify the exact file(s) that do the *measuring* — the detector/scorer/probe. Finalize them; record the SHA-256; from now the instrument is read-only. All mutable machinery (effect sizes, ablations, guards, thresholds you're still tuning) lives in a *separate harness* file. Change the instrument after this and it is a new instrument, new hash, new preregistration — say so. Hash: `python scripts/freeze_and_check.py --instrument <path> [more…] --hash-only`.
+**1 · Freeze and hash the instrument — and log what you tried before freezing.** Identify the exact file(s) that do the *measuring* — the detector/scorer/probe. Finalize them; record the SHA-256; from now the instrument is read-only. All mutable machinery (effect sizes, ablations, guards, thresholds you're still tuning) lives in a *separate harness* file. Change the instrument after this and it is a new instrument, new hash, new preregistration — say so. Hash: `python scripts/freeze_and_check.py --instrument <path> [more…] --hash-only`. **Then log the pre-freeze selection history:** how many variants — features, layers, positions, analysis paths — you explored *before* this one was frozen, and on what data. The freeze stops you tuning on the confirmatory data; it does nothing about the forking paths you walked getting here. An undocumented "I tried many" is itself a bound on the claim — write it down.
 
-**2 · Commit the decision rule.** Write the exact, mechanical rule mapping measurement → verdict, *before you can see the outcome*. A reader with your data and nothing else must reach the same verdict. Name the statistic, the threshold, the n, and what a null looks like. Bad: "the effect should be clear." Good: "SUPPORTED iff the 95% CI excludes 0 AND the paired win-rate beats Binomial(n,0.5) at .05; else a registered null."
+**2 · Commit the decision rule — and pin the unit and the vocabulary.** Write the exact, mechanical rule mapping measurement → verdict, *before you can see the outcome*. A reader with your data and nothing else must reach the same verdict. Name the statistic, the threshold, the n, and what a null looks like. Bad: "the effect should be clear." Good: "SUPPORTED iff the 95% CI excludes 0 AND the paired win-rate beats Binomial(n,0.5) at .05; else a registered null." Two things the n and the write-up quietly cheat on, so commit them here: (a) **unit of analysis** — what is *one independent observation*? If your items are paraphrase-cycled from a shared premise pool, they are not independent, and the real n is smaller than the cell count; cluster/aggregate to the true unit or report both. (b) **claims register** — pin the strongest word each claim may use ("proposed" / "consistent-with-causal" / "demonstrated"; "internal" vs "independent" replication). "Causal" is earned only by intervening on the representation and moving the predicted phenomenon; otherwise say "consistent with a downstream causal relationship."
 
-**3 · Give every causal claim a decoy that can kill it.** For each causal or difference claim, specify a control that is *equally strong but different in the dimension you're not claiming* — a content-matched decoy, a paired minimal-pair to cancel topic, a same-condition null that can actually come out null. Then answer, now: **if the control also fires, what does that mean?** (It means the leg measures your instrument or your mask, not the mechanism — and the claim dies.) If the target snaps rather than erodes, pre-declare that a bistable/no-graded-signal outcome is a real registered result.
+**3 · Give every causal claim a decoy that can kill it — and a floor and ceiling to read against.** For each causal or difference claim, specify a control that is *equally strong but different in the dimension you're not claiming* — a content-matched decoy, a paired minimal-pair to cancel topic, a same-condition null that can actually come out null. Then answer, now: **if the control also fires, what does that mean?** (It means the leg measures your instrument or your mask, not the mechanism — and the claim dies.) If the target snaps rather than erodes, pre-declare that a bistable/no-graded-signal outcome is a real registered result. **And commit a baseline battery:** your instrument's number is meaningless in absolute terms — it only means something as a *position between a floor and a ceiling*. Floor = a random-direction / random-probe result it must beat (does the effect survive randomization?). Ceiling = a self-split or target-trained probe (the most agreement estimation noise allows). Plus one cheap alternative it must beat — a token/position heuristic, a layer-only baseline. Read the result as where it sits between them, never as a bare figure.
 
 **4 · Promise the null.** Write, now, what you'll report if the result is null, and where. A run you'd only report if positive isn't preregistered — it's fishing.
 
@@ -40,9 +40,9 @@ Open `LESSONS.md` (ships with this skill) and skim it — it is the accumulated 
 Report the result either way. Then answer one question: **did anything go wrong (or nearly) that the steps above did not catch?** If yes, append it to `LESSONS.md` as one entry (symptom → why it fools you → the check that catches it next time). This is how the skill improves: the ledger is append-only, each lesson is a real scar, and next time Step 0 surfaces it. Changing the skill's *core* (this file) is itself a committed act — bump `version`, note the change, and treat the edit with the same freeze discipline the skill preaches.
 
 ## The 60-second version (if you do nothing else)
-1. Is the instrument frozen and hashed, and is this the validated version?
-2. Is the decision rule committed before I can see the outcome?
-3. Does every causal claim have a decoy that can kill it — and do I know what it means if the decoy also fires?
+1. Is the instrument frozen and hashed, and is this the validated version — and did I log how many variants I tried *before* freezing?
+2. Is the decision rule committed before I can see the outcome — with the *unit of analysis* pinned (are my items actually independent?) and the strongest word each claim may use?
+3. Does every causal claim have a decoy that can kill it — and is the result read against a random-direction floor and a ceiling, not as a bare number?
 4. Have I promised the null, and where?
 5. What's the cheapest replication that could falsify a positive — am I running it before promoting?
 6. Is any effect implausibly large (→ suspect a confound, not a triumph)?
@@ -54,3 +54,7 @@ This is written to exploit a measured fact about how models carry information fo
 
 ## Honest scope
 This encodes discipline; it does not certify correctness. A prereg that passes the check can still be a bad experiment — the check guarantees you committed the rules before the data, not that the rules are wise. Use it as a floor, not a ceiling. And the ledger only helps if you actually add to it.
+
+## Changelog
+- **0.3.0** — added the pre-freeze / inferential half a hostile reviewer attacks, from an external portfolio review: pre-freeze *selection history* (Step 1), *unit of analysis* + *claims register* (Step 2), and a *baseline battery* — floor/ceiling/cheap-alternative (Step 3). The certifier now requires all four. New scars L13–L14.
+- **0.2.x** — front-loaded stance rewrite; self-growing lessons ledger (L1–L12).
