@@ -1,7 +1,7 @@
 ---
 name: commit-before-run
 description: You are about to try to fool yourself — this skill is how you catch it before the data exist. Assume any result you are about to run for is an artifact until it survives the checks. Use it before any study, probe, detector, ablation, eval, or measurement whose number you intend to believe, cite, or report: it walks the freeze-the-ruler, commit-the-rule, match-the-decoy, publish-either-way discipline, generates a hash-pinned preregistration with a freeze block, and refuses to certify the run until the load-bearing fields are filled. It also grows — it keeps an append-only lessons ledger and adds to it after runs. Triggers: "preregister", "commit before run", "freeze the detector", "lock down the experiment", "prereg stub", "am I about to p-hack this", "is this result real".
-version: 0.3.0
+version: 0.4.0
 ---
 
 # commit-before-run
@@ -56,5 +56,6 @@ This is written to exploit a measured fact about how models carry information fo
 This encodes discipline; it does not certify correctness. A prereg that passes the check can still be a bad experiment — the check guarantees you committed the rules before the data, not that the rules are wise. Use it as a floor, not a ceiling. And the ledger only helps if you actually add to it.
 
 ## Changelog
+- **0.4.0** — cross-domain integrity scars generalized from an ML-safety program (Mirror), each written to lay over research in any field: classify a failed run before calling it a result (L15), prove a signal is *detectable* before interpreting its absence — the twin of L6 (L16), prefer relative to absolute thresholds and reject controls that presuppose the hypothesis (L17), the outcome-neutral-vs-outcome-affecting boundary for post-hoc fixes with the skeptic test (L18), hold the ruler fixed when you vary the subject (L19), and never let the subject narrate its own measurement (L20). New scars L15–L20.
 - **0.3.0** — added the pre-freeze / inferential half a hostile reviewer attacks, from an external portfolio review: pre-freeze *selection history* (Step 1), *unit of analysis* + *claims register* (Step 2), and a *baseline battery* — floor/ceiling/cheap-alternative (Step 3). The certifier now requires all four. New scars L13–L14.
 - **0.2.x** — front-loaded stance rewrite; self-growing lessons ledger (L1–L12).
